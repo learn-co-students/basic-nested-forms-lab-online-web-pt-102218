@@ -10,12 +10,17 @@ class RecipesController < ApplicationController
 
   def new
     @recipe = Recipe.new
-    @recipe.ingredients.build(name: "Cholcate Cake")
+    2.times {@recipe.ingredients.build}
+
   end
 
   def create
-    @recipe = Recipe.create(recipe_params)
-    redirect_to recipes_path
+    @recipe = Recipe.new(recipe_params)
+    if @recipe.save
+      redirect_to @recipe
+    else
+      render :new
+    end
   end
 
   private
@@ -24,6 +29,7 @@ class RecipesController < ApplicationController
     params.require(:recipe).permit(
       :title,
       ingredients_attributes: [
+        :id,
         :name,
         :quantity
       ]
